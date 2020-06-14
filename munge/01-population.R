@@ -4,7 +4,7 @@
 pop <- dem_pop_proj_age_snap 
 names(pop) <- pop[3,]
 
-tmp <- pop[-c(1:3),-c(2:3)] %>%
+pop <- pop[-c(1:3),-c(2:3)] %>%
   gather(year, value, 3:10) %>%
   mutate(age = trimws(` Age (years)`),
          year = as.numeric(gsub("\\*", "", trimws(year))),

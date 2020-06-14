@@ -1,27 +1,21 @@
-load.project()
+# population data for all LGAs and all year
+# approx() use based on https://stackoverflow.com/questions/27920690/linear-interpolation-using-dplyr
 
+pop <- dem_pop_proj_age_snap 
+names(pop) <- pop[3,]
 
-event.date <- c("2010-05-25", "2010-09-10", "2011-05-13", "2012-03-28", "2013-03-07",    
-                "2014-02-13", "2010-06-11", "2010-09-10", "2011-05-13", "2012-03-28",
-                "2013-03-07", "2014-02-13")
-variable   <- c("neck.bmd", "neck.bmd", "neck.bmd", "neck.bmd", "neck.bmd", "neck.bmd",
-                "wbody.bmd", "wbody.bmd", "wbody.bmd", "wbody.bmd", "wbody.bmd", "wbody.bmd")
-value      <- c(0.7490, 0.7615, 0.7900, 0.7730, NA, 0.7420, 1.0520, 1.0665, 1.0760,
-                1.0870, NA, 1.0550)
-## Bind into a data frame
-df <- data.frame(event.date, variable, value)
-rm(event.date, variable, value)
-## Convert date
-df$event.date <- as.Date(df$event.date)
-## Load libraries
-library(magrittr)
-library(xts)
-library(zoo)
-
-
-tmp <- df %>%
-  group_by(variable) %>%
-  arrange(variable, event.date) %>%
-  mutate(time=seq(1,n())) %>%
-  mutate(ip.value=approx(time,value,time)$y) %>%
-  select(-time)
+tmp <- pop[-c(1:3),-c(2:3)] %>%
+  gather(year, value, 3:10) %>%
+  mutate(age = trimws(` Age (years)`),
+         year = as.numeric(gsub("\\*", "", trimws(year))),
+         value = as.numeric(gsub(",", "", value)),
+         lga = gsub(" LGA", "", trimws(` Local Government Areas`))) %>%
+  # note that "All LGAs" becomes "Alls"
+  filter(age == "All ages",
+         year %in% c(2011:2021),
+         complete.cases(.)) %>%
+  distinct() %>%
+  select(lga, year, value) %>%
+  group_by(lga) %>%
+  complete(year = full_seq(2011:2021, 1)) %>%
+  mutate(filled = approx(year,value,year)$y)  

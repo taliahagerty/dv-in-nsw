@@ -4,6 +4,21 @@
 pop <- dem_pop_proj_age_snap 
 names(pop) <- pop[3,]
 
+
+lga <- c("Alls", 
+             "Gundagai", 
+             "Botany Bay", 
+             "Rockdale", 
+             "Western Plains Regional")
+
+crime.name <- c("State total", 
+                "Cootamundra-Gundagai", 
+                "Bayside", 
+                "Bayside", 
+                "Dubbo Regional")
+
+fix <- data.frame(lga, crime.name)
+
 pop <- pop[-c(1:3),-c(2:3)] %>%
   gather(year, value, 3:10) %>%
   mutate(age = trimws(` Age (years)`),
@@ -18,4 +33,8 @@ pop <- pop[-c(1:3),-c(2:3)] %>%
   select(lga, year, value) %>%
   group_by(lga) %>%
   complete(year = full_seq(2011:2021, 1)) %>%
-  mutate(filled = approx(year,value,year)$y)  
+  mutate(annual.pop = approx(year,value,year)$y) %>%
+  ungroup() %>%
+  left_join(fix) %>%
+  mutate(lga = ifelse(lga %in% fix.lga, crime.name, lga)) %>%
+  select(-value, - crime.name)

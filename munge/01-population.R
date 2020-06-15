@@ -36,5 +36,5 @@ pop <- pop[-c(1:3),-c(2:3)] %>%
   mutate(annual.pop = approx(year,value,year)$y) %>%
   ungroup() %>%
   left_join(fix) %>%
-  mutate(lga = ifelse(lga %in% fix.lga, crime.name, lga)) %>%
+  mutate(lga = ifelse(lga %in% fix$lga, crime.name, lga)) %>%
   select(-value, - crime.name)

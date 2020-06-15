@@ -14,6 +14,8 @@ df <- df %>%
   filter(year %in% c(2011:2020))
 
 
+  
+
 # For trend chart: monthly rates, nationwide
 
 nsw <- pop %>%

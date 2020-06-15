@@ -26,7 +26,7 @@ tmp <- incidents.nsw[, c(3, 7:309)] %>%
   separate(date, into = c("month", "year"), sep = "\\.") %>%
   mutate(year = as.numeric(ifelse(year %in% c("19", "20"), paste0("20", year), year)),
          indicator = "incidents") %>%
-  filter(year %in% c(2011:2020)) %>%
+  filter(year %in% c(2015:2020)) %>%
   left_join(nsw, by = c("year")) %>%
   mutate(value = value / (annual.pop / 100000)) %>%
   mutate(indicator = "rate") %>%
@@ -34,51 +34,22 @@ tmp <- incidents.nsw[, c(3, 7:309)] %>%
   unite(monthyear, month, year, sep=" ", remove=FALSE, na.rm=FALSE) %>%
   mutate(monthyear = as_date(as.yearmon(monthyear))) %>%
   arrange(monthyear) 
-  
-  
-  
-  mutate(date = as.Date(paste(tmp$year,tmp$month, "01", sep="-"), format = "%Y-%b-%d") ) %>%
-  mutate(month = month(date),
-         year= year(date),
-         date = format.Date(date, format = "%m-%y"))
-
 
 # %>%
-#   arrange(race, year, month) %>%
-#   select(date, race, n) %>% 
-#   distinct() %>%
-#   filter(race %in% c("A", "W", "H", "B")) %>%
-#   mutate(race = recode(race, "A" = "Asian",
-#                        "B" = "Black",
-#                        "W" = "White",
-#                        "H" = "Hispanic")) 
+#   mutate(mavg = SMA(value, n=4)) %>%
+#   select(-Subcategory, -indicator) %>%
+#   gather(indicator, value, 4:5)
 
 
-ggplot(tmp, aes(x = monthyear, y = value, group = 1)) +
+
+ggplot(tmp, aes(x = monthyear, y = value, group = indicator)) +
   geom_line() +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90)) + 
-  labs(y = "Rate per 100,000", x = "") +
-  geom_smooth(se = F) 
+  labs(y = "Monthly rate per 100,000 people", x = "") +
+  geom_smooth(se = F, span = 0.4) +
+  theme(text = element_text(family = "Effra"))
   
-  
-  scale_color_manual(values = c("#003f5c", "#7a5195", "#ef5675", "#ffa600")) +
-  # theme(legend.position = "bottom") +
-  scale_fill_discrete(name = "Race")
-© 2020 GitHub, Inc.
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

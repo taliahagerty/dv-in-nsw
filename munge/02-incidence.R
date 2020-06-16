@@ -47,30 +47,28 @@ tmp <- incidents.nsw[, c(3, 7:309)] %>%
 ggplot(tmp, aes(x = monthyear, y = value, group = indicator)) +
   geom_line() +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90)) + 
+  theme(axis.text.y = element_text(hjust = 25)) + 
   labs(y = "Monthly rate per 100,000 people", x = "") +
-  geom_smooth(se = F, span = 0.4) +
-  theme(text = element_text(family = "Effra"))
-  
+  geom_smooth(se = F, span = 0.4) 
 
 
 
-
-# compare change
-
-chg <- df %>%
-  # filter()
-  group_by(lga, indicator, year) %>%
-  summarise(value )
-  filter(year %in% c(min(year), max(year))) %>%
-  arrange(lga, indicator, year) %>%
-  group_by(lga, indicator) %>%
-  mutate(diff = value - lag(value),
-         change = (diff/lag(value))*100)
-
-
-
-key <- top_n(x, 5, pctchg) %>% pull(pctchg)
-pos <- which(x$pctchg %in% key)
-x <- x[pos, ] %>%
-  arrange(-pctchg)
+# 
+# # compare change
+# 
+# chg <- df %>%
+#   # filter()
+#   group_by(lga, indicator, year) %>%
+#   summarise(value )
+#   filter(year %in% c(min(year), max(year))) %>%
+#   arrange(lga, indicator, year) %>%
+#   group_by(lga, indicator) %>%
+#   mutate(diff = value - lag(value),
+#          change = (diff/lag(value))*100)
+# 
+# 
+# 
+# key <- top_n(x, 5, pctchg) %>% pull(pctchg)
+# pos <- which(x$pctchg %in% key)
+# x <- x[pos, ] %>%
+#   arrange(-pctchg)

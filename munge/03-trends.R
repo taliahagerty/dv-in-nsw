@@ -6,7 +6,7 @@ trn <- trn %>%
   filter(`Offence type` == "Domestic violence related assault") %>%
   gather(period, value, 3:7) %>%
  mutate(value = as.numeric(value)) %>%
-  rename(lga = `Local Government Area`) %>%
+  rename(lga = `Local Government Area`) %>%   # match the lga names to the shapefile:
   mutate(lga = gsub("Cootamundra-Gundagai", "Cootamundra-Gundagai Regional", lga)) %>%
   mutate(lga = gsub("Greater Hume Shire", "Greater Hume", lga)) %>%
   mutate(lga = gsub("Glen Innes Severn", "Glen Innes Severn Shire", lga)) %>%

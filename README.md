@@ -6,3 +6,12 @@ The blue trend line in the figure below highlights the rising trend with smoothe
 
 
 
+[ trend chart]
+
+Blacktown, Central Coast, Penrith, Canterbury-Bankstown, and Sydney had the highest number of incidents, based on the most recent 12-month reporting period. Blacktown had 29 of the worst 30 months over the last five years, in terms of the number of incidents reported. Highly populated LGAs and coastal areas reported the greatest number of incidents last year.
+
+[map]
+
+Most areas had a small number of assaults over the last 12 months; 75% of LGAs had fewer than 241 incidents. But the five most affected LGAs all reported more than 1,000 assaults.
+
+[histogram]

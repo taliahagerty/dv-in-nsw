@@ -20,19 +20,15 @@ df <- df %>%
 
   
 
-# For trend chart: monthly rates, nationwide
+# For trend chart: monthly rates, statewide
 
 nsw <- pop %>%
   filter(lga == "State total") %>%
   select(-lga)
 
-tmp <- incidents.nsw[, c(3, 7:309)] %>%
-  filter(Subcategory == "Domestic violence related assault") %>%
-  gather(date, value, -1) %>%
-  separate(date, into = c("month", "year"), sep = "\\.") %>%
-  mutate(year = as.numeric(ifelse(year %in% c("19", "20"), paste0("20", year), year)),
-         indicator = "incidents") %>%
-  filter(year %in% c(2015:2020)) %>%
+tmp <- df  %>%
+  group_by(month, year, indicator) %>% 
+  summarise(value = sum(value)) %>%
   left_join(nsw, by = c("year")) %>%
   mutate(value = value / (annual.pop / 100000)) %>%
   mutate(indicator = "rate") %>%
@@ -40,6 +36,8 @@ tmp <- incidents.nsw[, c(3, 7:309)] %>%
   unite(monthyear, month, year, sep=" ", remove=FALSE, na.rm=FALSE) %>%
   mutate(monthyear = as_date(as.yearmon(monthyear))) %>%
   arrange(monthyear) 
+
+
 
 # %>%
 #   mutate(mavg = SMA(value, n=4)) %>%

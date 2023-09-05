@@ -1,17 +1,21 @@
 
-# For map: raw incidents by lga
+# Raw incidents by lga
 
 df <- RCI_offencebymonth 
 names(df) <- tolower(names(df))
 
-df <- df %>%
+time.series <- c(min(pop$year):year(now()))
+
+df <- df %>% 
+  mutate(subcategory = gsub("\\*", "", trimws(subcategory))) %>% 
+  mutate(subcategory = ifelse(subcategory %in% "", offence.category, subcategory)) %>%
   filter(subcategory == "Domestic violence related assault") %>%
   select(-subcategory, -offence.category ) %>%
   gather(date, value, -lga) %>%
   separate(date, into = c("month", "year"), sep = "\\.") %>%
   mutate(year = as.numeric(ifelse(year %in% c("19", "20"), paste0("20", year), year)),
          indicator = "incidents") %>%
-  filter(year %in% c(2011:2020))
+  filter(year %in% time.series)
 
 
   
